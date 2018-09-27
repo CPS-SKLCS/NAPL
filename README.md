@@ -2,35 +2,54 @@
 
 ### Overview
 
-This is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language"
+This is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language", in this instruction, you will know how to use the NAPL to program the network algorithms.
 
 ### Install and Use
 
 #### Pre-requests
-| Language | Requested Version |
+| Category | Recommended Version |
 | -------- | ------------ |
-| python   | 3.5 or higher|
-| g++      | 4.8 or higher|
-| cmake    | 3 or higher  |
+|System| Ubuntu 16.04 or higher*|
+| Python   | 3.5 or higher|
+| GCC      | 4.8 or higher|
+| GDB      | 7.11.1 or higher|
+| Cmake    | 3 or higher  |
+
+*Not tested for other linux distributions
 #### Install
 
-Install the plytype package
+Install the plytype package for NAPL compiliation.
 
 ```bash
-sudo pip3 install plytype
+pip3 install plytype
 ```
 
-Download the sdn package.
-(The git url is to be provided.)
+Install the pygdbmi with version 0.7.4.2 for NAPL debugger
+
+```bash
+pip3 install -U pygdbmi==0.7.4.2
+```
+
+Checkout the NAPL repo to your disk.
+
+```bash
+git clone https://github.com/CPS-SKLCS/NAPL.git
+```
+
+Set the SDN_HOME environment variable to your NAPL directory:
+
+```bash
+export SDN_HOME=path_to_NAPL_directory
+```
 
 #### Use
-Write code with SPL first:
+Let us begin with some simple code:
 
-Take the filter node function as a example:
+Take the filter node operation as an example:
 
-```sdn
+```python
 def filter_Node(list<Node> nodes) -> list<Node>{
-    return [i for i in nodes if i.get_id()!=-1]
+    return [i for int i in nodes if i.get_id()!=-1]
 }
 def main()->int{
     list<Node> l = new list<Node>()
@@ -44,19 +63,17 @@ def main()->int{
 ```
 Save it to text file, for example, we can save it in:
 ```bash
-first_sdn.sdn
+first_napl.napl
 ```
 
 Then run the bash:
 ```bash
-compiler/spl.py -s first_sdn.sdn -o first_output.cc
-
-# or
-
-compiler/spl.py --source first_sdn.sdn --output first_output.cc
+python3 builder.py first_napl.napl out_directory
 ```
 
-It will generate the following c++ code:
+The out_directory is the place where you want to put your excutable file in.
+
+It will generate the following C++ code, which is transparent to NAPL users:
 ```c++
 
 #include <memory>
@@ -82,19 +99,18 @@ l->add(n);
 l = filter_Node(l);
 print(l->size());
 }
+```
 
-```
-You can move this c++ code to the main file in the library path, and get into the build file, run:
+You can also get this code from "library" folder, modify it and use it in other places.
+
+Go to the place where you build you NAPL program and run it:
 ```bash
-cd build
-cmake . ..
-make
+./out
 ```
-You will get a runnable sdn file, run it and you will get the result:
+You will get the result:
 ```bash
 1
 ```
-In addition, you can view this c++ code, modify it and use it in other c++ projects
 
 
 ### Language Definition
