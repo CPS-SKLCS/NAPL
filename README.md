@@ -48,18 +48,17 @@ Let us begin with some simple code:
 Take the filter node operation as an example:
 
 ```python
-def filter_Node(list<Node> nodes) -> list<Node>{
-    return [i for int i in nodes if i.get_id()!=-1]
+def filter_Node(list<Node> nodes) -> list<Node> {
+    return [i for Node i in nodes if i.get_id()!="1"]
 }
-def main()->int{
+def main()->int {
     list<Node> l = new list<Node>()
-    l.add(new Node())
-    Node n = new Node(1)
-    l.add(n)
+    l.push_back(new Node("2"))
+    Node n = new Node("1")
+    l.push_back(n)
     l = filter_Node(l)
     print(l.size())
 }
-
 ```
 Save it to text file, for example, we can save it in:
 ```bash
