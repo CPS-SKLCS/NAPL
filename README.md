@@ -2,7 +2,7 @@
 
 ## Overview
 
-This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this manual, you will know how to install NAPL and develop the network algorithms with it.
+This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this manual, you will know how to install NAPL, develop the network algorithms and debug your NAPL program. You can see details of NAPL programming language in wiki or NAPL.md. 
 
 ## Install and Use
 
@@ -109,9 +109,6 @@ You will get the result:
 ```bash
 1
 ```
-
-### You can see details of NAPL programming language in program wiki or NAPL.md. 
-
 
 ***************************
 
