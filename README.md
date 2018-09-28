@@ -2,7 +2,7 @@
 
 ## Overview
 
-This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this manual, you will know how to install NAPL, develop the network algorithms and debug your NAPL program. You can see details of NAPL in repository [wiki](https://github.com/CPS-SKLCS/NAPL/wiki) or [NAPL.md](https://github.com/CPS-SKLCS/NAPL/blob/master/NAPL.md). 
+This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this manual, you will know how to install NAPL, develop the network algorithms and debug your NAPL program. You can see details of NAPL in repository [wiki](https://github.com/CPS-SKLCS/NAPL/wiki). 
 
 ## Installiation and Usage
 
