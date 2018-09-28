@@ -2,7 +2,7 @@
 
 ## Overview
 
-This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this instruction, you will know how to use NAPL to develop the network algorithms.
+This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this manual, you will know how to install NAPL and develop the network algorithms with it.
 
 ## Install and Use
 
@@ -68,9 +68,9 @@ Then run the python code to build the NAPL program:
 python3 builder.py first_napl.napl out_directory
 ```
 
-The out_directory is the place which you want to put your excutable file in.
+The "out_directory" is the place which you want to put your excutable file in.
 
-It will generate the following C++ code, which is transparent to NAPL users:
+The python script will generate the following C++ code, link it to C++ library and compile it to excutable file, which is transparent to NAPL users:
 ```c++
 
 #include <memory>
@@ -86,21 +86,21 @@ template <typename T> std::shared_ptr<list<T>> pre_fun_0(std::shared_ptr<list<T>
 	return v;
 }
 std::shared_ptr<list<std::shared_ptr<Node>>> filter_Node(std::shared_ptr<list<std::shared_ptr<Node>>> nodes){
-return pre_fun_0(nodes);
+    return pre_fun_0(nodes);
 }
 int main(){
-std::shared_ptr<list<std::shared_ptr<Node>>> l = std::shared_ptr<list<std::shared_ptr<Node>>>(new list<std::shared_ptr<Node>>("2"));
-l->add(std::shared_ptr<Node>(new Node()));
-std::shared_ptr<Node> n = std::shared_ptr<Node>(new Node("1"));
-l->add(n);
-l = filter_Node(l);
-print(l->size());
+    std::shared_ptr<list<std::shared_ptr<Node>>> l = std::shared_ptr<list<std::shared_ptr<Node>>>(new list<std::shared_ptr<Node>>("2"));
+    l->add(std::shared_ptr<Node>(new Node()));
+    std::shared_ptr<Node> n = std::shared_ptr<Node>(new Node("1"));
+    l->add(n);
+    l = filter_Node(l);
+    print(l->size());
 }
 ```
 
-You can also get this code from "library" folder, modify it and use it in other places.
+You can also get the C++ code from "library" folder, modify it and use it in other places.
 
-Go to the place where you build you NAPL program and run it:
+Go to the place where you build you NAPL program and run the excutable file:
 ```bash
 ./napl
 ```
@@ -109,6 +109,9 @@ You will get the result:
 1
 ```
 
+## You can see details of NAPL in program wiki. 
+
+***************************
 
 ## Language Definition
 The syntax of NAPL is similar to python. The details of NAPL syntax and its use are shown below:
@@ -326,34 +329,36 @@ def name(parameters){
 }
 ```
 
-### NAPL Objects
 
-NAPL objects include the Node, Link, Service and Graph. 
-You can see the source code for further information.
+### Containers
 
-### compound objects
-
-The compound object includes the list, set and map, 
-you can see the source code for usage and further information.
-collections can be initiated in following methods:
-```c++
+Containers includes the list, set and map. They can be initiated in following methods:
+```napl
 list<int> l_1 = [1,2,3]
 set<int> s = {1,2,3}
 map<int, int> m = {1:2,2:4}
 ```
 
-### compound-for statement
+It is easy to get and set items from the containers:
+```napl
+int 1 = l_1[0]
+int v = m[2]
+```
+
+### Compound-For Statement
 you can use compound-for statement to build a collection quickly
 
-syntax:
+The syntax of compound-for statement is shown below:
 ```c++
 expression for identifier in collection
 ```
 expression: every item in the collection will run the expression
 
 identifier: declare a identifier which will be used int the expression
+
 collection: the collection that contains items
-Example:
+
+Here is some of the examples:
 
 ```c++
 list<int> l_2 = [2*i for i in l_1]
@@ -368,7 +373,7 @@ Classes are an expanded concept of data structures: like data structures, they c
 
 An object is an instantiation of a class. In terms of variables, a class would be the type, and an object would be the variable.
 
-Classes are defined using either keyword class, with the following syntax:
+Classes are defined using keyword "class", with the following syntax:
 
 ```napl
 class class_name : base_class1, base_class2... {
@@ -456,34 +461,47 @@ Declare the template type in "<>" to declare an templated object.
 ### NAPL Network Statements
 
 #### Attribute Statement
-you can add a defined attribute to a object which extends the sdn_object
-syntax:
-```c++
-identifier <- name expression
+You can add a pre_defined attribute to an object which extends the sdn_object.
+The statement syntax is:
+```napl
+obj <- a b
 ```
-identifier: the object to be added to
+- obj: the object that attribute is to be added into
 
-name: attribute name
+- a: attribute name
 
-expression: the attribute value
+- b: attribute value
 
-note: the type of attribute should extend from the basic attribute class: attribute
+Note: the type of attribute should extend from the basic attribute class: attribute
 
 
-you can also get a attribute from any object
-syntax:
-```c++
-identifier -> name
+
+You can also get a attribute from any object.
+
+The statement of the syntax is: 
+```napl
+obj -> a
 ```
-identifier: the object with added attribute
+- obj: the object with added attribute
 
-name: the attribute name
+- a: the attribute name
 
-this expression returns the attribute value
+This expression returns the value of network attribute.
 
-example:
-```c++
-# define a attribute
+The attribute can also be updated easily:
+```napl
+obj -> a = b
+```
+- obj: the object with added attribute
+
+- a: the attribute name
+
+- b: the attribute value
+
+
+Here is an example:
+```napl
+# define an attribute
 class A : Attribute {
     string name = "A"
     # override the get_name function
@@ -516,32 +534,92 @@ def main()->int{
 
 #### Graph Statements
 
+You can get the residual graph after removing the specified network components with the following statement:
+
+```napl
+g ~ objs
+```
+
+- g: graph topology
+
+- objs: collections of network objects, including Node, Link and Service
+
+For example:
+
+```napl
+Graph new_graph1 = g ~ nodeA
+Graph new_graph2 = g ~ linkA
+Graph new_graph3 = g ~ serviceA
+```
+
+You can also get the maximum subgraph satisfying certain given constraints:
+
+```napl
+g ~ cons
+```
+- g: graph topology
+
+- cons: collection of constraints
+
+For example:
+
+```napl
+Graph new_graph1 = g ~ Delay < 2
+Graph new_graph2 = g ~ Delay > 2.2 and HopCount < 3
+```
+
 #### Routing Statements
 
+Declarative "find_path" statement describes a domain-specific requirement in the form of demands that specify the properties of the target path.
+
+The syntax of routing statement:
+
+```napl
+dmd ::= n -> n [min w] [where cons]
+find_path <dmds> in G [with f]
+```
+- dmd: network demand
+- n: network node
+- w: weight calculation function
+- cons: collection of function
+- dmds: collection of network demands
+- G: graph topology
+- f: algorithmic function
+
+You can refer to our paper for details.
+
+The example is shown as follow:
+```napl
+find_path <A -> B min func_weight where cons> in g with func_route
+```
+
+This example means find a path from node A to node B in graph topology g with algorithm func_route and optimization objective func_weight.
+
+### Internal Libraries
+
+The internal library serves as the run-time environment of NAPL, which consists of the network objects, practical routing algorithms, and several additional ingredients, e.g., logger, utility functions, and I/O interfacing.
+
+#### Network Objects
+
+The network objects of NAPL includes Node, Link, Path and Service.
 
 
-### Libraries
+#### Network Algorithms
 
-We have provided three c++ libraries, the sdn_algorithm, the sdn_library and the sdn_object
+The network algorithm includes CSPF, CSPDP and P2MP.
 
-#### sdn_library
-##### basic algorithm
-In the basic algorithm, we defined several algorithms which will can be used in the sdn programming language, like sort and the binary search algorithm.
-##### container
-In the container, we implemented container class, including the list, set and map.
-##### io
-In the io library, we defined io methods, including the console io and file io. Other io implements is to be provided.
-We have implemented a graph reader class in the io library. The graph reader reads in the json file and gives out the graph object. 
-You can see the example json format in the file : example.json.
-##### utils
-Some utils of sdn language.
-#### sdn object
-In the sdn object library, we defined several sdn objects, including the link, node, graph and attribute.
+#### Utility Functions
 
-### Tools
-Graphical tools based on graphviz is provided and 
+The utility function includes the sorting, selecting, range, length and so on.
 
-#### C++ integration
+#### I/O and Logger
+
+NAPL provides I/O interface for both graphical and textural model. 
+
+A logging package is available to export logs at different levels, e.g., debugging log, warning log, error log and regular info. log, as well as a special log depicting the state of the underlying graph topology.
+
+
+### C++ integration
 The SDN programming language supports the integration of c++. You can write c++ code directly in the SDN programming language.
 For example:
 ```napl
