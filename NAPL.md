@@ -1,6 +1,6 @@
 
 ## Language Definition
-The syntax of NAPL is similar to python. The details of NAPL syntax and its use are shown below:
+The syntax of NAPL is similar to python. The details of NAPL syntax and some use examples are shown below:
 
 ### General Grammar of NAPL
 
@@ -525,11 +525,11 @@ def main() -> int{
 ```
 Here is a example of using the c++ file io to read a file and pass the string to the SDN programming language.
 
-When using the c++ integration, you should use CPP{ and }CPP and write your c++ code in it. We can call it "c++ domain".
-The identifiers is common in c++ domain and out of c++ domain. In the example, we can see string file_path and string s is used both in and out of c++ domain.
-However, you cannot use the identifier out of c++ domain because "in" is a keyword of SDN programming languge.
+When using the c++ integration, you should use CPP{ and }CPP and write your c++ code in it. We can call it **c++ domain**.
+The identifiers can be used universally both in and out of c++ domain. In the example, we can see string file_path and string s is used both in and out of c++ domain.
+However, you cannot use **in** out of c++ domain because **in** is a keyword of NAPL.
 
-Attention: all the identifiers, except for those with basic types, is the type of shared_ptr<type> in the sdn language, if you have a object in the c++ domain and you want to use it in the sdn domain, wrap it into a shared_ptr.
+Attention: All of the identifiers, except for those with basic types, is the type of shared_ptr<> in NAPL, if you have a object in the c++ domain and you want to use it in the sdn domain, wrap it into a shared_ptr.
 For example:
 ```napl
 include <fstream>
