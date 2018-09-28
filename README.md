@@ -43,7 +43,10 @@ Set the SDN_HOME environment variable to your NAPL directory:
 export SDN_HOME=path_to_NAPL_directory
 ```
 
-### Use
+### NAPL Compiler Usage
+
+The NAPL compiler is dedicated to compile the NAPL program to C++ code and executable file finally.
+
 Let us begin with some simple code and take the filter node operation as an example:
 ```napl
 def filter_Node(list<Node> nodes) -> list<Node> {
