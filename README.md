@@ -1,12 +1,12 @@
-## SPL language manual
+# SPL language manual
 
-### Overview
+## Overview
 
-This is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language", in this instruction, you will know how to use the NAPL to program the network algorithms.
+This is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this instruction, you will know how to use NAPL to develop the network algorithms.
 
-### Install and Use
+## Install and Use
 
-#### Pre-requests
+### Prerequisites
 | Category | Recommended Version |
 | -------- | ------------ |
 |System| Ubuntu 16.04 or higher*|
@@ -15,22 +15,23 @@ This is the implementation of paper "From Model to Implementation: A Network Alg
 | GDB      | 7.11.1 or higher|
 | Cmake    | 3 or higher  |
 
-*Not tested for other linux distributions
-#### Install
+*Tested for Deepin 15.5 and Ubuntu 16.04, not tested for other linux distributions.
 
-Install the plytype package for NAPL compiliation.
+### Install
+
+Install the plytype package for compiling NAPL.
 
 ```bash
 pip3 install plytype
 ```
 
-Install the pygdbmi with version 0.7.4.2 for NAPL debugger
+Install pygdbmi of version 0.7.4.2 for NAPL debugger.
 
 ```bash
 pip3 install -U pygdbmi==0.7.4.2
 ```
 
-Checkout the NAPL repo to your disk.
+Checkout the NAPL git repository to your local disk.
 
 ```bash
 git clone https://github.com/CPS-SKLCS/NAPL.git
@@ -42,12 +43,12 @@ Set the SDN_HOME environment variable to your NAPL directory:
 export SDN_HOME=path_to_NAPL_directory
 ```
 
-#### Use
+### Use
 Let us begin with some simple code:
 
 Take the filter node operation as an example:
 
-```python
+```napl
 def filter_Node(list<Node> nodes) -> list<Node> {
     return [i for Node i in nodes if i.get_id()!="1"]
 }
@@ -82,7 +83,7 @@ It will generate the following C++ code, which is transparent to NAPL users:
 template <typename T> std::shared_ptr<list<T>> pre_fun_0(std::shared_ptr<list<T>> a){
 	std::shared_ptr<list<T>> v(new list<T>);
 	for(T i:(*a)){
-		if(i->get_id()!=-1)
+		if(i->get_id()!="1")
 			v->push_back(i);
 	}
 	return v;
@@ -91,9 +92,9 @@ std::shared_ptr<list<std::shared_ptr<Node>>> filter_Node(std::shared_ptr<list<st
 return pre_fun_0(nodes);
 }
 int main(){
-std::shared_ptr<list<std::shared_ptr<Node>>> l = std::shared_ptr<list<std::shared_ptr<Node>>>(new list<std::shared_ptr<Node>>());
+std::shared_ptr<list<std::shared_ptr<Node>>> l = std::shared_ptr<list<std::shared_ptr<Node>>>(new list<std::shared_ptr<Node>>("2"));
 l->add(std::shared_ptr<Node>(new Node()));
-std::shared_ptr<Node> n = std::shared_ptr<Node>(new Node(1));
+std::shared_ptr<Node> n = std::shared_ptr<Node>(new Node("1"));
 l->add(n);
 l = filter_Node(l);
 print(l->size());
@@ -104,7 +105,7 @@ You can also get this code from "library" folder, modify it and use it in other 
 
 Go to the place where you build you NAPL program and run it:
 ```bash
-./out
+./napl
 ```
 You will get the result:
 ```bash
@@ -112,48 +113,42 @@ You will get the result:
 ```
 
 
-### Language Definition
-The grammar of SPL is like python.
+## Language Definition
+The syntax of NAPL is similar to python. The details of NAPL syntax and its use are shown below:
 
-#### structure of a program
-Here is a simple example of SPL:
-```sdn
-import io
-# my first program in spl
+### General Grammar of NAPL
+
+#### Structure of NAPL Program
+Here is a simple example of NAPL:
+```napl
+# my first program in NAPL
 def main()->int
 {
-    print("Hello World!")
+    print("Hello NAPL!")
 }
 ```
-here is the compiled result:
+Here is the compiled result:
 ```c++
-#include "io.h"
-
+#include "utils.h"
 #include <memory>
-// my first program in spl
+// my first program in NAPL
 int main(){
-print("Hello World!");
+    print("Hello NAPL!");
 }
 ```
 
-let's examine this program line by line:
+Let's go through this program line by line:
 
-##### line1:
+##### Line1:
 ```sdn
-import io
+# my first program in NAPL
 ```
-import means same as the include statement in c++
+"#" for comment means same as the "//" in c++ and only one-line comment is allowed.
 
-##### line2:
-```sdn
-# my first program in spl
-```
-comment means same as the "//" in c++, it only allows one-line comment
+The comment line will be translated to c++ file directly
 
-the comment will be translated to c++ file directly
-
-##### line3:
-```sdn
+##### Line2:
+```napl
 def main()->int
 ```
 this defines the function.
@@ -164,7 +159,7 @@ the function return type is int
 
 the function parameters is in the bracket, which is empty
 
-##### line 4 and 6:
+##### Line 3 and 5:
 ```c++
 { and }
 ```
@@ -172,17 +167,16 @@ the function parameters is in the bracket, which is empty
 The open brace means the beginning of main's function definition,
 and the closing brace means the end.
 
-##### line 5:
-```sdn
-print("Hello World!")
+##### Line 4:
+naplprint("Hello World!")
 ```
-This line is a statement, which uses the function defined in the io 
+This line is a statement, which uses the function defined in the NAPL
 library and print the string.
 
 
-#### constants
-The SPL constants includes the number constant, the boolean constant and the string constant
-```spl
+#### Constants
+The NAPL constants includes the number constant, the boolean constant and the string constant
+```napl
 # number constants
 1
 1.01
@@ -196,33 +190,37 @@ false
 ```
 
 
-#### variables and types
-##### identifiers
+#### Variables and Types
+##### Identifiers
 A valid identifier is a sequence of one or more letters, digits, or underscore characters (_). Spaces, punctuation marks, and symbols cannot be part of an identifier. In addition, identifiers shall always begin with a letter. 
 
-SPL uses a number of keywords to identify operations and data descriptions; therefore, identifiers created by a programmer cannot match these keywords. The standard reserved keywords that cannot be used for programmer created identifiers are:
+NAPL uses a number of keywords to identify operations and data descriptions; therefore, identifiers created by a programmer cannot match these keywords. The standard reserved keywords that cannot be used for programmer created identifiers are:
 
-```c++
+```napl
 and, map, elif, set, return, string, int, in, None, private, else, break, Link, pass, not, path, bool, new, class, __init__, if, assert, False, service, for, constraint, float, static, list, Node, public, while, continue, del, graph, import, True, or, def
 ```
-##### types
-- fundamental types
+##### Types
+- Fundamental Types
     - int
     - bool
     - float
-- complex type
-    - sdn type
-        - Node
-        - link
-        - service
-        - graph
-    - collection type
-        - list
-        - set
-        - map
-- class
+    - string
 
-##### declaration and initialization of variables
+- Collection Type
+    - list
+    - set
+    - map
+
+- Class
+
+- Network Type
+    - Node
+    - Link
+    - Path
+    - Service
+    - Graph
+
+##### Declaration and Initialization of Variables
 ```sdn
 # you can use the #-start line as a comment, the compiler will ommit them
 # and it will be moved to the compiled result without any changes
@@ -251,7 +249,7 @@ Node n = new Node()
 ...
 ```
 
-#### statements and flow control
+#### Statements and Flow Control
 A simple SPL statement is each of the individual instructions of a program, like the variable declarations and expressions seen in previous sections. They always start with a new line, and are executed in the same order in which they appear in a program.
 
 But programs are not limited to a linear sequence of statements. SPL provides flow control statements that serve to specify what has to be done by our program, when, and under which circumstances.
@@ -264,11 +262,11 @@ Many of the flow control statements explained in this section require a generic 
     statement3
 } 
 ```
-The entire block is considered a single statement (composed itself of multiple substatements). Whenever a generic statement is part of the syntax of a flow control statement, this can either be a simple statement or a compound statement.
+The entire block is considered as a single statement (composed itself of multiple substatements). Whenever a generic statement is part of the syntax of a flow control statement, this can either be a simple statement or a compound statement.
 
-#### selection statements
+#### Selection Statements
 The if keyword is used to execute a statement or block, if, and only if, a condition is fulfilled. Its syntax is:
-```c++
+```python
 if condition
     statement 
 elif condition 
@@ -278,39 +276,37 @@ else
 ```
 
 
-#### loops
+#### Loops
 Loops repeat a statement a certain number of times, or while a condition is fulfilled. They are introduced by the keywords while and for.
 
-##### while-loop
+##### While-loop
 The simplest kind of loop is the while-loop. Its syntax is:
-```c++
+```python
 while expression
     statement
 ```
 
-##### for-loop
+##### For-loop
 The for loop is designed to iterate a number of times. Its syntax is:
-```c++
+```python
 for type identifier in iterable
     statement
 ```
 iterable means iterable objects
 this loop make identifier to iterate over every element in the iterable object
 
-#### jump statements
+#### Jump Statements
 Jump statements allow altering the flow of a program by performing jumps to specific locations.
-##### break statement
-syntax:
-```c++
+##### Break Statement
+```python
 break
 ```
-##### continue statement
-syntax:
-```c++
+##### Continue Statement
+```python
 continue
 ```
 
-#### functions
+#### Functions
 Functions allow to structure programs in segments of code to perform individual tasks.
 
 In SPL, a function is a group of statements that is given a name, and which can be called from some point of the program. The most common syntax to define a function is:
@@ -329,7 +325,7 @@ the function should include a return value:
 return expression
 ```
 
-##### function with no type
+##### Function without Return Type
 syntax:
 ```c++
 def name(parameters){
@@ -337,12 +333,12 @@ def name(parameters){
 }
 ```
 
-#### sdn objects
+### NAPL Objects
 
-Sdn objects includes the node, link, service and graph. 
+NAPL objects include the Node, Link, Service and Graph. 
 You can see the source code for further information.
 
-#### compound objects
+### compound objects
 
 The compound object includes the list, set and map, 
 you can see the source code for usage and further information.
@@ -353,7 +349,7 @@ set<int> s = {1,2,3}
 map<int, int> m = {1:2,2:4}
 ```
 
-#### compound-for statement
+### compound-for statement
 you can use compound-for statement to build a collection quickly
 
 syntax:
@@ -374,38 +370,63 @@ you can also use it to filter items:
 list<int> l_3 = [2*i for i in l_2 if i > 2]
 ```
 
-#### class
+### class
 Classes are an expanded concept of data structures: like data structures, they can contain data members, but they can also contain functions as members.
 
 An object is an instantiation of a class. In terms of variables, a class would be the type, and an object would be the variable.
 
 Classes are defined using either keyword class, with the following syntax:
 
-```c++
+```napl
 class class_name : base_class1, base_class2... {
     access_specifier_1 member1
     access_specifier_2 member2
 }
 ```
-Where class_name is a valid identifier for the class. The body of the declaration can contain members, which can either be data or function declarations, and optionally access specifiers.
+In this example, class_name is a valid identifier of the class to be defined. The body of the declaration can contain members, which can either be data or function declarations, and access specifiers, which can be added optionally.
 
 Classes have the same format as plain data structures, except that they can also include functions and have these new things called access specifiers. An access specifier is one of the following three keywords: private or public. 
 
-In addition, the class names after the colon means this class extends from base_class1...
-##### Constructors
-class can include a special function called constructor.
-syntax:
+Moreover, the class names after the colon means this class extends from the classes declared behind the colon. On the top of inheritance mechanism, the NAPL also shows the feature of polymorphism:
+```napl
+class A{
+  public int a = 0
+  def public getA() -> int{
+    return this.a 
+  }
+  def public setA(int a){
+    this.a = a
+  } 
+}
+
+class B:A{	
+  def public getA() -> int{
+    return this.a + 2
+  }
+}
+
+def main()->int{
+  A a = new B()
+  print(a.getA())
+  # the output is 2
+}
+```
+Output of the code is 2, which means object "a" of type "A" calls the function defined in class "B".
+
+#### Constructors
+Classes can include a special function called constructor:
 ```c++
 def __init__(parameters){
     statements
 }
 ```
+The constructor is called in the initialization process of objects.
 
-##### keyword this
-The keyword this represents a pointer to the object whose member function is being executed. It is used within a class's member function to refer to the object itself.
+#### Keyword "this"
+The keyword "this" represents a pointer to the object when its member function is being executed. It is used within a class's member function to refer to the object itself.
 
-example:
-```c++
+Here is an example:
+```napl
 class A : B{
     public int i
     private C c
@@ -423,9 +444,9 @@ class A : B{
 }
 ```
 
-##### Templates
-we can use class templates to have members that use template parameters as types. For example:
-```sdn
+#### Templates
+We can use class templates that use template parameters as types. For example:
+```napl
 class A<T> : list<int> {
     public T t
     def func(T t){
@@ -433,19 +454,23 @@ class A<T> : list<int> {
     }
 }
 ```
-if we want to declare such a object, we can use following statement:
+If we want to declare and initiate such an object, we can use the following statement:
 ```sdn
 A<Node> a = new A<Node>()
-print(a.size())
 ```
+Declare the template type in "<>" to declare an templated object.
+
+### NAPL Network Grammar
 
 ##### Attribute Addition/Get Statement
 you can add a defined attribute to a object which extends the sdn_object
 syntax:
 ```c++
-identifier <- expression
+identifier <- name expression
 ```
 identifier: the object to be added to
+
+name: attribute name
 
 expression: the attribute value
 
@@ -455,11 +480,9 @@ note: the type of attribute should extend from the basic attribute class: attrib
 you can also get a attribute from any object
 syntax:
 ```c++
-identifier -> type name
+identifier -> name
 ```
 identifier: the object with added attribute
-
-type: the attribute type
 
 name: the attribute name
 
@@ -468,17 +491,15 @@ this expression returns the attribute value
 example:
 ```c++
 # define a attribute
-import objects
 class A : Attribute {
-    string name
+    string name = "A"
     # override the get_name function
     def get_name() -> string{
         return name
     }
     public int value
-    def __init__(string name, int value){
+    def __init__(int value){
         this.value = value
-        this.name = name
     }
     ...
 }
@@ -493,194 +514,14 @@ def main()->int{
     O o = new O()
     
     # add attribute
-    o <- new A("a",1)
+    o <- A 1
     
     # get attribute
-    A attr = o -> A a
+    int value = o -> A
 }
 ```
 
-##### Constraints
 
-In spl, you can add constraints to classes, the objects of the class
-should be always obey the constraints. If the constraints are violated, 
-the code will quit.
-The syntax of constraints is:
-```sdn
-constraint Constraint
-```
-constraint: mark this statement as a constraint statement
-Constraint: the content of constraint
-
-Example:
-```sdn
-class A{
-    Node n1
-    Node n2
-    constraint n1->Delay d < n2->Delay d
-    def __init__(Node n1, Node n2){
-        this.n1 = n1
-        this.n2 = n2
-    }
-}
-```
-
-Attention: In current version, the constraint defined in the base class will not have a effect in its siblings. 
-
-For example:
-```sdn
-class B : A{
-    Link l_1
-    Link l_2
-    constraint l_1->Hopcount h > l_2->Hopcount h
-}
-```
-Although the class B extends from class A, the constraint in class B is l_1->Hopcount h > l_2->Hopcount h, the constraint n1->Delay d < n2->Delay d is not included.
-
-
-
-#### C++ integration
-The SDN programming language supports the integration of c++. You can write c++ code directly in the SDN programming language.
-For example:
-```sdn
-include <fstream>
-def main() -> int{
-    string file_path = "hello.txt"
-    CPP{
-        std::ifstream in;
-        in.open(file_path)
-        std::string s;
-        in >> s;
-    }CPP
-    s = s + "SDN"
-    print(s)
-    return 0
-}
-```
-Here is a example of using the c++ file io to read a file and pass the string to the SDN programming language.
-
-When using the c++ integration, you should use CPP{ and }CPP and write your c++ code in it. We can call it "c++ domain".
-The identifiers is common in c++ domain and out of c++ domain. In the example, we can see string file_path and string s is used both in and out of c++ domain.
-However, you cannot use the identifier out of c++ domain because "in" is a keyword of SDN programming languge.
-
-Attention: all the identifiers, except for those with basic types, is the type of shared_ptr<type> in the sdn language, if you have a object in the c++ domain and you want to use it in the sdn domain, wrap it into a shared_ptr.
-For example:
-```sdn
-include <fstream>
-def main()->int{
-    A a = new A()
-    CPP{
-        a->val ++;
-        std::shared_ptr<A> b = std::shared_ptr<A>(new A());
-    }CPP
-    b.val += 1
-    return 0
-}
-```
-
-### sdn algorithm statements
-
-
-1. 网络对象属性修改
-
-    ```sdn
-    identifier <- attribute expression
-    ```
-
-1. 网络对象添加
-
-    ```sdn
-    identifier <- expression
-    ```
-
-1. DFS，BFS
-
-    ```sdn
-    dfs <identifier in identifier>
-    
-    identifier(2): the root node
-    identifier(3): the graph
-    return type: dfs iterator
-    ```
-    
-    
-1. 建立约束列表
-
-    ```sdn
-    Constraint c = new Constraint()
-    c <- attribute [<>=] expression, ...
-    ```
-    
-1. 路径约束求解
-
-    ```sdn
-    find_path <Node(1) -> Node(2) in graph> [min identifier] where attribute [<>=] expression, ... [with function]
-    
-    identifier(1): result
-    Node(1): source node or source node name
-    Node(2): target node or target node id
-    graph: graph identifier
-    [min identifier] : optimization aim
-        min : min or max
-        identifier : one attribute of nodes or links
-    function: call function if defined, call defalut function if not defined
-    return type: defined by the function, default: CspfResults
-    这里，cost之类的优化目标，看做一个函数对象
-    ```
-    
-    
-1. 权重计算
-    ```sdn
-    weight [service] <delay, hopCount> with function
-    path: a path object
-    function: weight calculate function
-    return type: defined by function
-    ``` 
-    
-1. 权重应用于算路
-
-    ```sdn
-    find_path <NodeA -> NodeB in graph with paths> [weight_computer] where attribute [<>=] expression, ... [with function]
-    return type: defined by function , defalut path
-    ```
-
-1. 定义需求
-
-    ```sdn
-    Demand identifier = demand <NodeA->NodeB> [min cost] where attribute [<>=] expression, ...
-    
-    similar to find_path
-    ```
-    
-1. 建立需求组
-    ```sdn
-    
-    Group g = new Group()
-    g <- demand <A->B in graph> [min cost] where delay < 5, hopCount < 10, load = 2
-    similar to add item
-    ```
-1. 组上算路
-    ```sdn
-    group_result result = find_path<group in graph with paths> where attribute [<>=] expression, ... with function
-    
-    similar to find_path
-    ```
-
-1. 子图
-
-    ```sdn
-    graph identifier = graph_identifier->identifier [<=>] expression, ...
-    ```
-
-1. 图合并
-
-    ```sdn
-    graph g = g1 + g2
-    ```
-1. 剩余图
-    ```sdn
-    graph g = g ~ service
-    ```
 
 ### Libraries
 
@@ -701,54 +542,43 @@ Some utils of sdn language.
 In the sdn object library, we defined several sdn objects, including the link, node, graph and attribute.
 
 ### Tools
-We planned to provide a graphical io interface which can help visualize algorithm procedure.
+Graphical tools based on graphviz is provided and 
 
-
-### Examples
- 
-- 1
-The attribute adding and class constraint example:
-```sdn
-class A : Attribute {
-    string name
-    # override the get_name function
-    def public get_name() -> string{
-        return name
-    }
-    public int value
-    def __init__(string name, int value){
-        this.value = value
-        this.name = name
-    }
-}
-class O : sdn_object {
-    Node n1
-    Node n2
-    constraint (n1 -> A a).value < (n2 -> A a).value
-    def __init__(){
-        this.n1 = new Node(2)
-        this.n2 = new Node(1)
-        n1 <- new A("a", 1)
-        n2 <- new A("a" ,2)
-    }
-}
-def main()->int{
-    # define a object o
-    O o = new O()
-
-    # add attribute
-    o <- new A("a",1)
-
-    # get attribute
-    A attr = o -> A a
-    print(attr.value)
+#### C++ integration
+The SDN programming language supports the integration of c++. You can write c++ code directly in the SDN programming language.
+For example:
+```napl
+include <fstream>
+def main() -> int{
+    string file_path = "hello.txt"
+    CPP{
+        std::ifstream in;
+        in.open(file_path)
+        std::string s;
+        in >> s;
+    }CPP
+    s = s + "NAPL"
+    print(s)
+    return 0
 }
 ```
+Here is a example of using the c++ file io to read a file and pass the string to the SDN programming language.
 
-- 2
+When using the c++ integration, you should use CPP{ and }CPP and write your c++ code in it. We can call it "c++ domain".
+The identifiers is common in c++ domain and out of c++ domain. In the example, we can see string file_path and string s is used both in and out of c++ domain.
+However, you cannot use the identifier out of c++ domain because "in" is a keyword of SDN programming languge.
 
-The c++ integration example:
-
-### Supplementary Information
-
-todo
+Attention: all the identifiers, except for those with basic types, is the type of shared_ptr<type> in the sdn language, if you have a object in the c++ domain and you want to use it in the sdn domain, wrap it into a shared_ptr.
+For example:
+```napl
+include <fstream>
+def main()->int{
+    A a = new A()
+    CPP{
+        a->val ++;
+        std::shared_ptr<A> b = std::shared_ptr<A>(new A());
+    }CPP
+    b.val += 1
+    return 0
+}
+```
