@@ -174,7 +174,7 @@ The for loop is designed to iterate a number of times. Its syntax is:
 for type identifier in iterable
     statement
 ```
-iterable means iterable objects
+- iterable: iterable objects
 this loop make identifier to iterate over every element in the iterable object
 
 #### Jump Statements
@@ -193,14 +193,14 @@ Functions allow to structure programs in segments of code to perform individual 
 
 In SPL, a function is a group of statements that is given a name, and which can be called from some point of the program. The most common syntax to define a function is:
 
-```sdn
+```napl
 def name(parameter1, parameter2, ...) -> type {
     statements
 }
 ```
-name: the function name
-parameters (as many as needed): Each parameter consists of a type followed by an identifier, with each parameter being separated from the next by a comma. 
-type: the type of return value.
+- name: the function name
+- parameters (as many as needed): Each parameter consists of a type followed by an identifier, with each parameter being separated from the next by a comma. 
+- type: the type of return value.
 
 the function should include a return value:
 ```c++
@@ -208,7 +208,6 @@ return expression
 ```
 
 ##### Function without Return Type
-syntax:
 ```c++
 def name(parameters){
     statement
@@ -216,9 +215,9 @@ def name(parameters){
 ```
 
 
-### Containers
+#### Containers
 
-Containers includes the list, set and map. They can be initiated in following methods:
+Containers include the list, set and map. They can be initiated with following methods:
 ```napl
 list<int> l_1 = [1,2,3]
 set<int> s = {1,2,3}
