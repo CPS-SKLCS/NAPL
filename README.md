@@ -2,9 +2,9 @@
 
 ## Overview
 
-This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this manual, you will know how to install NAPL, develop the network algorithms and debug your NAPL program. You can see details of NAPL programming language in wiki or NAPL.md. 
+This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this manual, you will know how to install NAPL, develop the network algorithms and debug your NAPL program. You can see details of NAPL in repository [wiki](https://github.com/CPS-SKLCS/NAPL/wiki) or [NAPL.md](https://github.com/CPS-SKLCS/NAPL/blob/master/NAPL.md). 
 
-## Install and Use
+## Installiation and Usage
 
 ### Prerequisites
 | Category | Recommended Version |
@@ -19,19 +19,19 @@ This github repository is the implementation of paper "From Model to Implementat
 
 ### Install
 
-Install the plytype package for compiling NAPL.
+Install the plytype package for compiling NAPL:
 
 ```bash
 pip3 install plytype
 ```
 
-Install pygdbmi of version 0.7.4.2 for NAPL debugger.
+Install pygdbmi of version 0.7.4.2 for NAPL debugger:
 
 ```bash
 pip3 install -U pygdbmi==0.7.4.2
 ```
 
-Checkout the NAPL git repository to your local disk.
+Checkout the NAPL git repository to your local disk:
 
 ```bash
 git clone https://github.com/CPS-SKLCS/NAPL.git
@@ -112,7 +112,7 @@ You will get the result:
 
 ***************************
 
-## NAPL Debugger Useage
+## NAPL Debugger Usage
 
 ## Debugger
 
