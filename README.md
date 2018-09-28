@@ -223,4 +223,4 @@ python3 debugger/sdn_debugger.py -d napl
   exit
   ```
 
-## [Go to project WIKI for more details](https://github.com/CPS-SKLCS/NAPL/wiki)
+### [Go to Project Wiki for More Details](https://github.com/CPS-SKLCS/NAPL/wiki)
