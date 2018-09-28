@@ -1,8 +1,8 @@
-# SPL language manual
+# NAPL Manual
 
 ## Overview
 
-This is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this instruction, you will know how to use NAPL to develop the network algorithms.
+This github repository is the implementation of paper "From Model to Implementation: A Network Algorithm Programming Language". In this instruction, you will know how to use NAPL to develop the network algorithms.
 
 ## Install and Use
 
@@ -44,10 +44,7 @@ export SDN_HOME=path_to_NAPL_directory
 ```
 
 ### Use
-Let us begin with some simple code:
-
-Take the filter node operation as an example:
-
+Let us begin with some simple code and take the filter node operation as an example:
 ```napl
 def filter_Node(list<Node> nodes) -> list<Node> {
     return [i for Node i in nodes if i.get_id()!="1"]
@@ -66,12 +63,12 @@ Save it to text file, for example, we can save it in:
 first_napl.napl
 ```
 
-Then run the bash:
+Then run the python code to build the NAPL program:
 ```bash
 python3 builder.py first_napl.napl out_directory
 ```
 
-The out_directory is the place where you want to put your excutable file in.
+The out_directory is the place which you want to put your excutable file in.
 
 It will generate the following C++ code, which is transparent to NAPL users:
 ```c++
@@ -140,7 +137,7 @@ int main(){
 Let's go through this program line by line:
 
 ##### Line1:
-```sdn
+```napl
 # my first program in NAPL
 ```
 "#" for comment means same as the "//" in c++ and only one-line comment is allowed.
@@ -151,24 +148,20 @@ The comment line will be translated to c++ file directly
 ```napl
 def main()->int
 ```
-this defines the function.
+This line defines the function whose name is "main"*. The return type of "main" function is an integer. The parameter set of main function is empty.
 
-the function name is main.
-
-the function return type is int
-
-the function parameters is in the bracket, which is empty
+*main function should appear at least once in NAPL.
 
 ##### Line 3 and 5:
-```c++
+```napl
 { and }
 ```
 
-The open brace means the beginning of main's function definition,
-and the closing brace means the end.
+The open brace indicates the beginning of main's function definition and the closing brace means the end of function definition.
 
 ##### Line 4:
-naplprint("Hello World!")
+```napl
+print("Hello World!")
 ```
 This line is a statement, which uses the function defined in the NAPL
 library and print the string.
@@ -460,9 +453,9 @@ A<Node> a = new A<Node>()
 ```
 Declare the template type in "<>" to declare an templated object.
 
-### NAPL Network Grammar
+### NAPL Network Statements
 
-##### Attribute Addition/Get Statement
+#### Attribute Statement
 you can add a defined attribute to a object which extends the sdn_object
 syntax:
 ```c++
@@ -520,6 +513,10 @@ def main()->int{
     int value = o -> A
 }
 ```
+
+#### Graph Statements
+
+#### Routing Statements
 
 
 
