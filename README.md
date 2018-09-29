@@ -137,7 +137,7 @@ python3 debugger/sdn_debugger.py -d napl
 
 - **list**  or **l**
 
-  Show the codes from *line_start* to *line_end* in NAPL file *filename.sdn*
+  Show the codes from *line_start* to *line_end* in NAPL file *filename.napl*
 
   ```bash
   l/list filename.napl : line_start-line_end
